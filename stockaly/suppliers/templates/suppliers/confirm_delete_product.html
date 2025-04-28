@@ -1,0 +1,30 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Confirm Delete</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'supplier_detail' product.supplier.id %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Supplier
+        </a>
+    </div>
+</div>
+
+<!-- Confirmation Form -->
+<div class="form-container">
+    <div class="alert" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+        <i class="fas fa-exclamation-triangle"></i> Warning: This action cannot be undone.
+    </div>
+    
+    <p>Are you sure you want to delete the product <strong>{{ product.product_name }}</strong>?</p>
+    
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-group" style="display: flex; gap: 10px;">
+            <button type="submit" class="submit-btn" style="background-color: #dc3545;">Delete Product</button>
+            <a href="{% url 'supplier_detail' product.supplier.id %}" class="cancel-btn" style="text-decoration: none; display: inline-block;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

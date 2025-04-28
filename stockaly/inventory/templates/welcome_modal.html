@@ -1,0 +1,131 @@
+<div id="welcomeModal" class="modal">
+    <div class="modal-content welcome-modal">
+        <div class="modal-header">
+            <h2 class="modal-title">Welcome to Stockaly!</h2>
+            <button class="close-modal" onclick="closeWelcomeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="welcome-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <h3>Thank you for joining Stockaly!</h3>
+            <p>We're excited to help you manage your inventory efficiently. Here's how to get started:</p>
+            
+            <div class="welcome-steps">
+                <div class="welcome-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Add Your First Item</h4>
+                        <p>Click the "Add Item" button to start building your inventory.</p>
+                    </div>
+                </div>
+                
+                <div class="welcome-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Customize Your View</h4>
+                        <p>Try our new dark mode toggle for comfortable viewing day or night.</p>
+                    </div>
+                </div>
+                
+                <div class="welcome-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Track Your Inventory</h4>
+                        <p>Monitor stock levels, values, and activity from your dashboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="primary-btn" onclick="closeWelcomeModal()">Get Started</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .welcome-modal {
+        max-width: 600px;
+    }
+    
+    .welcome-icon {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-icon i {
+        font-size: 3rem;
+        color: var(--primary-color);
+        background-color: rgba(66, 133, 244, 0.1);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+    
+    .welcome-steps {
+        margin-top: 20px;
+    }
+    
+    .welcome-step {
+        display: flex;
+        margin-bottom: 15px;
+        align-items: flex-start;
+    }
+    
+    .step-number {
+        width: 30px;
+        height: 30px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+        margin: 0 0 5px;
+        color: var(--light-text);
+    }
+    
+    body.dark-mode .step-content h4 {
+        color: var(--dark-text);
+    }
+    
+    .primary-btn {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .primary-btn:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+</style>
+
+<script>
+    function closeWelcomeModal() {
+        document.getElementById('welcomeModal').style.display = 'none';
+    }
+    
+    // Show welcome modal for new users
+    document.addEventListener('DOMContentLoaded', function() {
+        // const isNewUser = {% if is_new_user %}true{% else %}false{% endif %};
+        if (isNewUser) {
+            document.getElementById('welcomeModal').style.display = 'block';
+        }
+    });
+</script>

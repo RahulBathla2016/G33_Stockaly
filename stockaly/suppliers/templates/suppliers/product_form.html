@@ -1,0 +1,82 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">{{ title }}</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'supplier_detail' supplier.id %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Supplier
+        </a>
+    </div>
+</div>
+
+<!-- Product Form -->
+<div class="form-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.product_name.id_for_label }}">Product Name</label>
+                {{ form.product_name }}
+                {% if form.product_name.errors %}
+                <div class="text-danger">{{ form.product_name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.product_code.id_for_label }}">Product Code</label>
+                {{ form.product_code }}
+                {% if form.product_code.errors %}
+                <div class="text-danger">{{ form.product_code.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.unit_price.id_for_label }}">Unit Price</label>
+                {{ form.unit_price }}
+                {% if form.unit_price.errors %}
+                <div class="text-danger">{{ form.unit_price.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.minimum_order_quantity.id_for_label }}">Minimum Order Quantity</label>
+                {{ form.minimum_order_quantity }}
+                {% if form.minimum_order_quantity.errors %}
+                <div class="text-danger">{{ form.minimum_order_quantity.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.lead_time_days.id_for_label }}">Lead Time (days)</label>
+                {{ form.lead_time_days }}
+                {% if form.lead_time_days.errors %}
+                <div class="text-danger">{{ form.lead_time_days.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.is_active.id_for_label }}">Active</label>
+                {{ form.is_active }}
+                {% if form.is_active.errors %}
+                <div class="text-danger">{{ form.is_active.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">Save Product</button>
+            <a href="{% url 'supplier_detail' supplier.id %}" class="cancel-btn" style="text-decoration: none; display: inline-block;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

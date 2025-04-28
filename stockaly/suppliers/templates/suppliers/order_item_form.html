@@ -1,0 +1,50 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">{{ title }}</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'purchase_order_detail' order.id %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Order
+        </a>
+    </div>
+</div>
+
+<!-- Order Item Form -->
+<div class="form-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.product.id_for_label }}">Product</label>
+                {{ form.product }}
+                {% if form.product.errors %}
+                <div class="text-danger">{{ form.product.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.quantity.id_for_label }}">Quantity</label>
+                {{ form.quantity }}
+                {% if form.quantity.errors %}
+                <div class="text-danger">{{ form.quantity.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.unit_price.id_for_label }}">Unit Price</label>
+                {{ form.unit_price }}
+                {% if form.unit_price.errors %}
+                <div class="text-danger">{{ form.unit_price.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">Add to Order</button>
+            <a href="{% url 'purchase_order_detail' order.id %}" class="cancel-btn" style="text-decoration: none; display: inline-block;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

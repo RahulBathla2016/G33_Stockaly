@@ -1,0 +1,98 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Purchase Orders</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'supplier_dashboard' %}" class="export-btn">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{% url 'add_purchase_order' %}" class="add-btn">
+            <i class="fas fa-plus"></i> Create Order
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="search-filter-container">
+    <form method="GET" action="" class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" placeholder="Search orders..." value="{{ search_query }}">
+    </form>
+    <div class="filter-options">
+        <select name="status" id="status_filter" class="filter-select" onchange="updateFilters()">
+            <option value="">All Statuses</option>
+            <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Draft</option>
+            <option value="submitted" {% if status_filter == 'submitted' %}selected{% endif %}>Submitted</option>
+            <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+            <option value="shipped" {% if status_filter == 'shipped' %}selected{% endif %}>Shipped</option>
+            <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+            <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+        </select>
+    </div>
+</div>
+
+<!-- Purchase Orders Table -->
+<div class="supplier-table-container">
+    {% if orders %}
+    <table class="supplier-table">
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Supplier</th>
+                <th>Order Date</th>
+                <th>Expected Delivery</th>
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_number }}</td>
+                <td>{{ order.supplier.name }}</td>
+                <td>{{ order.order_date|date:"Y-m-d" }}</td>
+                <td>{{ order.expected_delivery_date|date:"Y-m-d" }}</td>
+                <td>
+                    <span class="status-badge status-{{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+                <td>${{ order.total_amount }}</td>
+                <td class="item-actions">
+                    <a href="{% url 'purchase_order_detail' order.id %}" class="action-btn view-btn">View</a>
+                    <a href="{% url 'edit_purchase_order' order.id %}" class="action-btn edit-btn">Edit</a>
+                    <a href="{% url 'delete_purchase_order' order.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No purchase orders found</h3>
+        <p>Create your first purchase order to get started.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function updateFilters() {
+        const statusFilter = document.getElementById('status_filter').value;
+        const searchQuery = '{{ search_query }}';
+        
+        let url = '?';
+        if (searchQuery) {
+            url += `search=${searchQuery}&`;
+        }
+        if (statusFilter) {
+            url += `status=${statusFilter}`;
+        }
+        
+        window.location.href = url;
+    }
+</script>
+{% endblock %}

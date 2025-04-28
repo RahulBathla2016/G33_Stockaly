@@ -1,0 +1,182 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Supplier Management Dashboard</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'export_suppliers_csv' %}" class="export-btn">
+            <i class="fas fa-file-export"></i> Export CSV
+        </a>
+        <a href="{% url 'add_supplier' %}" class="add-btn">
+            <i class="fas fa-plus"></i> Add Supplier
+        </a>
+        <button id="themeToggle" class="theme-toggle">
+            <i class="fas fa-moon"></i> Theme
+        </button>
+    </div>
+</div>
+
+<!-- Dashboard Summary -->
+<div class="dashboard-summary">
+    <div class="summary-card">
+        <div class="summary-icon blue">
+            <i class="fas fa-building"></i>
+        </div>
+        <div class="summary-info">
+            <h3>{{ total_suppliers }}</h3>
+            <p>Total Suppliers</p>
+        </div>
+    </div>
+    
+    <div class="summary-card">
+        <div class="summary-icon green">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="summary-info">
+            <h3>{{ active_suppliers }}</h3>
+            <p>Active Suppliers</p>
+        </div>
+    </div>
+    
+    <div class="summary-card">
+        <div class="summary-icon yellow">
+            <i class="fas fa-box"></i>
+        </div>
+        <div class="summary-info">
+            <h3>{{ total_products }}</h3>
+            <p>Supplier Products</p>
+        </div>
+    </div>
+    
+    <div class="summary-card">
+        <div class="summary-icon red">
+            <i class="fas fa-clipboard-list"></i>
+        </div>
+        <div class="summary-info">
+            <h3>{{ pending_orders }}</h3>
+            <p>Pending Orders</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div class="search-filter-container">
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; width: 100%;">
+        <a href="{% url 'supplier_list' %}" class="add-btn" style="flex: 1;">
+            <i class="fas fa-list"></i> View All Suppliers
+        </a>
+        <a href="{% url 'purchase_order_list' %}" class="add-btn" style="flex: 1; background-color: #34a853;">
+            <i class="fas fa-shopping-cart"></i> Purchase Orders
+        </a>
+        <a href="{% url 'add_purchase_order' %}" class="add-btn" style="flex: 1; background-color: #fbbc05;">
+            <i class="fas fa-plus"></i> New Purchase Order
+        </a>
+    </div>
+</div>
+
+<!-- Recent Suppliers -->
+<div class="supplier-table-container">
+    <h2 style="padding: 15px; margin: 0; border-bottom: 1px solid var(--light-border);">Recent Suppliers</h2>
+    {% if recent_suppliers %}
+    <table class="supplier-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Company</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Date Added</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for supplier in recent_suppliers %}
+            <tr>
+                <td>{{ supplier.name }}</td>
+                <td>{{ supplier.company }}</td>
+                <td>{{ supplier.get_category_display }}</td>
+                <td>
+                    <span class="status-badge status-{{ supplier.status }}">
+                        {{ supplier.get_status_display }}
+                    </span>
+                </td>
+                <td>{{ supplier.date_added|date:"Y-m-d" }}</td>
+                <td class="item-actions">
+                    <a href="{% url 'supplier_detail' supplier.id %}" class="action-btn view-btn">View</a>
+                    <a href="{% url 'edit_supplier' supplier.id %}" class="action-btn edit-btn">Edit</a>
+                    <a href="{% url 'delete_supplier' supplier.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-building"></i>
+        <h3>No suppliers found</h3>
+        <p>Add your first supplier to get started.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Recent Purchase Orders -->
+<div class="supplier-table-container">
+    <h2 style="padding: 15px; margin: 0; border-bottom: 1px solid var(--light-border);">Recent Purchase Orders</h2>
+    {% if recent_orders %}
+    <table class="supplier-table">
+        <thead>
+            <tr>
+                <th>Order Number</th>
+                <th>Supplier</th>
+                <th>Order Date</th>
+                <th>Status</th>
+                <th>Total Amount</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in recent_orders %}
+            <tr>
+                <td>{{ order.order_number }}</td>
+                <td>{{ order.supplier.name }}</td>
+                <td>{{ order.order_date|date:"Y-m-d" }}</td>
+                <td>
+                    <span class="status-badge status-{{ order.status }}">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+                <td>${{ order.total_amount }}</td>
+                <td class="item-actions">
+                    <a href="{% url 'purchase_order_detail' order.id %}" class="action-btn view-btn">View</a>
+                    <a href="{% url 'edit_purchase_order' order.id %}" class="action-btn edit-btn">Edit</a>
+                    <a href="{% url 'delete_purchase_order' order.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-clipboard-list"></i>
+        <h3>No purchase orders found</h3>
+        <p>Create your first purchase order to get started.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Supplier Categories Chart -->
+<div class="chart-container">
+    <h2 class="chart-title">Supplier Categories</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+        {% for category in categories %}
+        <div style="background-color: rgba(66, 133, 244, 0.1); padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
+            <span style="font-weight: 500;">{{ category.get_category_display }}</span>
+            <span style="margin-left: 10px; background-color: var(--primary-color); color: white; padding: 2px 8px; border-radius: 10px;">{{ category.count }}</span>
+        </div>
+        {% empty %}
+        <p>No categories data available</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

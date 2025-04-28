@@ -1,0 +1,126 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Purchase Order Details</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'purchase_order_list' %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+        <a href="{% url 'edit_purchase_order' order.id %}" class="add-btn">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'delete_purchase_order' order.id %}" class="export-btn" style="background-color: #dc3545;">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+    </div>
+</div>
+
+<!-- Order Details -->
+<div class="detail-container">
+    <div class="detail-header">
+        <h2 class="detail-title">Order #{{ order.order_number }}</h2>
+        <span class="status-badge status-{{ order.status }}">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+    
+    <div class="detail-info">
+        <div>
+            <div class="info-group">
+                <div class="info-label">Supplier</div>
+                <div class="info-value">
+                    <a href="{% url 'supplier_detail' order.supplier.id %}">{{ order.supplier.name }}</a>
+                </div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Order Date</div>
+                <div class="info-value">{{ order.order_date|date:"F j, Y" }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Expected Delivery</div>
+                <div class="info-value">{{ order.expected_delivery_date|date:"F j, Y" }}</div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="info-group">
+                <div class="info-label">Total Amount</div>
+                <div class="info-value" style="font-size: 1.2rem; font-weight: 600; color: var(--primary-color);">${{ order.total_amount }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Created By</div>
+                <div class="info-value">{{ order.created_by.username }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Created At</div>
+                <div class="info-value">{{ order.created_at|date:"F j, Y H:i" }}</div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="info-group">
+                <div class="info-label">Shipping Address</div>
+                <div class="info-value">{{ order.shipping_address }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if order.notes %}
+    <div class="section-title">Notes</div>
+    <p>{{ order.notes }}</p>
+    {% endif %}
+</div>
+
+<!-- Order Items -->
+<div class="supplier-table-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--light-border);">
+        <h2 style="margin: 0;">Order Items</h2>
+        <a href="{% url 'add_order_item' order.id %}" class="add-btn">
+            <i class="fas fa-plus"></i> Add Item
+        </a>
+    </div>
+    
+    {% if items %}
+    <table class="supplier-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Product Code</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.product_name }}</td>
+                <td>{{ item.product.product_code }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.unit_price }}</td>
+                <td>${{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right; font-weight: 600;">Total:</td>
+                <td style="font-weight: 600;">${{ order.total_amount }}</td>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-box"></i>
+        <h3>No items in this order</h3>
+        <p>Add items to this purchase order to get started.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

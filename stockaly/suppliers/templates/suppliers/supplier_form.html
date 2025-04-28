@@ -1,0 +1,132 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">{{ title }}</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'supplier_list' %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Suppliers
+        </a>
+    </div>
+</div>
+
+<!-- Supplier Form -->
+<div class="form-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <div class="text-danger">{{ form.name.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.company.id_for_label }}">Company</label>
+                {{ form.company }}
+                {% if form.company.errors %}
+                <div class="text-danger">{{ form.company.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">Phone</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}
+                <div class="text-danger">{{ form.phone.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.website.id_for_label }}">Website</label>
+                {{ form.website }}
+                {% if form.website.errors %}
+                <div class="text-danger">{{ form.website.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}">Category</label>
+                {{ form.category }}
+                {% if form.category.errors %}
+                <div class="text-danger">{{ form.category.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">Status</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                <div class="text-danger">{{ form.status.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.address.id_for_label }}">Address</label>
+            {{ form.address }}
+            {% if form.address.errors %}
+            <div class="text-danger">{{ form.address.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.city.id_for_label }}">City</label>
+                {{ form.city }}
+                {% if form.city.errors %}
+                <div class="text-danger">{{ form.city.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.state.id_for_label }}">State/Province</label>
+                {{ form.state }}
+                {% if form.state.errors %}
+                <div class="text-danger">{{ form.state.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.zip_code.id_for_label }}">Zip/Postal Code</label>
+                {{ form.zip_code }}
+                {% if form.zip_code.errors %}
+                <div class="text-danger">{{ form.zip_code.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.country.id_for_label }}">Country</label>
+                {{ form.country }}
+                {% if form.country.errors %}
+                <div class="text-danger">{{ form.country.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.notes.id_for_label }}">Notes</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}
+            <div class="text-danger">{{ form.notes.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="submit-btn">Save Supplier</button>
+            <a href="{% url 'supplier_list' %}" class="cancel-btn" style="text-decoration: none; display: inline-block;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

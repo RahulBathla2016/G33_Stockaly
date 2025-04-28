@@ -1,0 +1,223 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Supplier Details</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'supplier_list' %}" class="export-btn">
+            <i class="fas fa-arrow-left"></i> Back to Suppliers
+        </a>
+        <a href="{% url 'edit_supplier' supplier.id %}" class="add-btn">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'delete_supplier' supplier.id %}" class="export-btn" style="background-color: #dc3545;">
+            <i class="fas fa-trash"></i> Delete
+        </a>
+    </div>
+</div>
+
+<!-- Supplier Details -->
+<div class="detail-container">
+    <div class="detail-header">
+        <h2 class="detail-title">{{ supplier.name }}</h2>
+        <span class="status-badge status-{{ supplier.status }}">
+            {{ supplier.get_status_display }}
+        </span>
+    </div>
+    
+    <div class="detail-info">
+        <div>
+            <div class="info-group">
+                <div class="info-label">Company</div>
+                <div class="info-value">{{ supplier.company }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ supplier.email }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Phone</div>
+                <div class="info-value">{{ supplier.phone }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Website</div>
+                <div class="info-value">
+                    {% if supplier.website %}
+                    <a href="{{ supplier.website }}" target="_blank">{{ supplier.website }}</a>
+                    {% else %}
+                    Not provided
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="info-group">
+                <div class="info-label">Address</div>
+                <div class="info-value">{{ supplier.address }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">City</div>
+                <div class="info-value">{{ supplier.city }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">State/Province</div>
+                <div class="info-value">{{ supplier.state }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Zip/Postal Code</div>
+                <div class="info-value">{{ supplier.zip_code }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Country</div>
+                <div class="info-value">{{ supplier.country }}</div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="info-group">
+                <div class="info-label">Category</div>
+                <div class="info-value">{{ supplier.get_category_display }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Date Added</div>
+                <div class="info-value">{{ supplier.date_added|date:"F j, Y" }}</div>
+            </div>
+            
+            <div class="info-group">
+                <div class="info-label">Last Updated</div>
+                <div class="info-value">{{ supplier.last_updated|date:"F j, Y" }}</div>
+            </div>
+        </div>
+    </div>
+    
+    {% if supplier.notes %}
+    <div class="section-title">Notes</div>
+    <p>{{ supplier.notes }}</p>
+    {% endif %}
+</div>
+
+<!-- Tabs for Products and Purchase Orders -->
+<div class="tabs">
+    <div class="tab active" onclick="openTab(event, 'products')">Products</div>
+    <div class="tab" onclick="openTab(event, 'orders')">Purchase Orders</div>
+</div>
+
+<!-- Products Tab -->
+<div id="products" class="tab-content active">
+    <div class="supplier-table-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--light-border);">
+            <h2 style="margin: 0;">Products</h2>
+            <a href="{% url 'add_supplier_product' supplier.id %}" class="add-btn">
+                <i class="fas fa-plus"></i> Add Product
+            </a>
+        </div>
+        
+        {% if products %}
+        <table class="supplier-table">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Code</th>
+                    <th>Unit Price</th>
+                    <th>Min. Order Qty</th>
+                    <th>Lead Time (days)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.product_code }}</td>
+                    <td>${{ product.unit_price }}</td>
+                    <td>{{ product.minimum_order_quantity }}</td>
+                    <td>{{ product.lead_time_days }}</td>
+                    <td>
+                        {% if product.is_active %}
+                        <span class="status-badge status-active">Active</span>
+                        {% else %}
+                        <span class="status-badge status-inactive">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="item-actions">
+                        <a href="{% url 'edit_supplier_product' product.id %}" class="action-btn edit-btn">Edit</a>
+                        <a href="{% url 'delete_supplier_product' product.id %}" class="action-btn delete-btn">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-box"></i>
+            <h3>No products found</h3>
+            <p>Add products for this supplier to get started.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Purchase Orders Tab -->
+<div id="orders" class="tab-content">
+    <div class="supplier-table-container">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--light-border);">
+            <h2 style="margin: 0;">Purchase Orders</h2>
+            <a href="{% url 'add_purchase_order' %}" class="add-btn">
+                <i class="fas fa-plus"></i> Create Order
+            </a>
+        </div>
+        
+        {% if purchase_orders %}
+        <table class="supplier-table">
+            <thead>
+                <tr>
+                    <th>Order Number</th>
+                    <th>Order Date</th>
+                    <th>Expected Delivery</th>
+                    <th>Status</th>
+                    <th>Total Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in purchase_orders %}
+                <tr>
+                    <td>{{ order.order_number }}</td>
+                    <td>{{ order.order_date|date:"Y-m-d" }}</td>
+                    <td>{{ order.expected_delivery_date|date:"Y-m-d" }}</td>
+                    <td>
+                        <span class="status-badge status-{{ order.status }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td>${{ order.total_amount }}</td>
+                    <td class="item-actions">
+                        <a href="{% url 'purchase_order_detail' order.id %}" class="action-btn view-btn">View</a>
+                        <a href="{% url 'edit_purchase_order' order.id %}" class="action-btn edit-btn">Edit</a>
+                        <a href="{% url 'delete_purchase_order' order.id %}" class="action-btn delete-btn">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clipboard-list"></i>
+            <h3>No purchase orders found</h3>
+            <p>Create a purchase order for this supplier to get started.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

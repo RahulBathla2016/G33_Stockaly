@@ -1,0 +1,113 @@
+{% extends 'suppliers/base.html' %}
+
+{% block supplier_content %}
+<!-- Header Section -->
+<div class="supplier-header">
+    <h1 class="supplier-title">Suppliers</h1>
+    <div class="supplier-actions">
+        <a href="{% url 'export_suppliers_csv' %}" class="export-btn">
+            <i class="fas fa-file-export"></i> Export CSV
+        </a>
+        <a href="{% url 'add_supplier' %}" class="add-btn">
+            <i class="fas fa-plus"></i> Add Supplier
+        </a>
+        <button id="themeToggle" class="theme-toggle">
+            <i class="fas fa-moon"></i> Theme
+        </button>
+    </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="search-filter-container">
+    <form method="GET" action="" class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" placeholder="Search suppliers..." value="{{ search_query }}">
+    </form>
+    <div class="filter-options">
+        <select name="status" id="status_filter" class="filter-select" onchange="updateFilters()">
+            <option value="">All Statuses</option>
+            <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+            <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending Approval</option>
+            <option value="blacklisted" {% if status_filter == 'blacklisted' %}selected{% endif %}>Blacklisted</option>
+        </select>
+        <select name="category" id="category_filter" class="filter-select" onchange="updateFilters()">
+            <option value="">All Categories</option>
+            <option value="electronics" {% if category_filter == 'electronics' %}selected{% endif %}>Electronics</option>
+            <option value="clothing" {% if category_filter == 'clothing' %}selected{% endif %}>Clothing</option>
+            <option value="food" {% if category_filter == 'food' %}selected{% endif %}>Food & Beverages</option>
+            <option value="office" {% if category_filter == 'office' %}selected{% endif %}>Office Supplies</option>
+            <option value="furniture" {% if category_filter == 'furniture' %}selected{% endif %}>Furniture</option>
+            <option value="raw_materials" {% if category_filter == 'raw_materials' %}selected{% endif %}>Raw Materials</option>
+            <option value="other" {% if category_filter == 'other' %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+</div>
+
+<!-- Suppliers Table -->
+<div class="supplier-table-container">
+    {% if suppliers %}
+    <table class="supplier-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Company</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for supplier in suppliers %}
+            <tr>
+                <td>{{ supplier.name }}</td>
+                <td>{{ supplier.company }}</td>
+                <td>{{ supplier.email }}</td>
+                <td>{{ supplier.phone }}</td>
+                <td>{{ supplier.get_category_display }}</td>
+                <td>
+                    <span class="status-badge status-{{ supplier.status }}">
+                        {{ supplier.get_status_display }}
+                    </span>
+                </td>
+                <td class="item-actions">
+                    <a href="{% url 'supplier_detail' supplier.id %}" class="action-btn view-btn">View</a>
+                    <a href="{% url 'edit_supplier' supplier.id %}" class="action-btn edit-btn">Edit</a>
+                    <a href="{% url 'delete_supplier' supplier.id %}" class="action-btn delete-btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-building"></i>
+        <h3>No suppliers found</h3>
+        <p>Add your first supplier to get started.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function updateFilters() {
+        const statusFilter = document.getElementById('status_filter').value;
+        const categoryFilter = document.getElementById('category_filter').value;
+        const searchQuery = '{{ search_query }}';
+        
+        let url = '?';
+        if (searchQuery) {
+            url += `search=${searchQuery}&`;
+        }
+        if (statusFilter) {
+            url += `status=${statusFilter}&`;
+        }
+        if (categoryFilter) {
+            url += `category=${categoryFilter}`;
+        }
+        
+        window.location.href = url;
+    }
+</script>
+{% endblock %}

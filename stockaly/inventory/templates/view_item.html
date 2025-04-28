@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}View Item | Stockaly{% endblock %}
+
+{% block content %}
+<style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin-top: 0;
+      padding: 0;
+    }  
+    form {
+      background-color: #ffffff;
+      max-width: 700px;  
+      margin: 0 auto;
+      margin-top: 100px;
+      margin-bottom: 40px;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;  
+      min-height: 400px;  
+    }
+    form div {
+      margin-bottom: 20px;
+    }
+  
+    form label {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+  
+    form input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      color: #555;
+      cursor: not-allowed; 
+      box-sizing: border-box;
+    }
+  
+    form input:read-only {
+      background-color: #e9ecef;
+      color: #6c757d;
+    }
+  
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1.1em;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+  
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  
+    .btn:focus {
+      outline: none;
+    }
+  
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      form {
+        width: 90%;
+      }
+      h1 {
+        font-size: 2em;
+      }
+    }
+</style>
+  <form>
+    {% csrf_token %}
+    <div>
+      <label for="item_name">Item Name</label>
+      <input type="text" id="item_name" name="item_name" value="{{ item.item_name }}" readonly>
+    </div>
+    <div>
+      <label for="item_number">Item Number</label>
+      <input type="text" id="item_number" name="item_number" value="{{ item.item_number }}" readonly>
+    </div>
+    <div>
+      <label for="quantity">Quantity</label>
+      <input type="text" id="quantity" name="quantity" value="{{ item.quantity }}" readonly>
+    </div>
+    <div>
+      <label for="price">Price</label>
+      <input type="text" id="price" name="price" value="{{ item.price }}" readonly>
+    </div>
+    <div>
+      <label for="date_added">Date Added</label>
+      <input type="text" id="date_added" name="date_added" value="{{ item.date_added|date:'Y-m-d' }}" readonly>
+    </div>
+    <!-- <div>
+      <label for="last_changed">Last Changed</label>
+      <input type="text" id="last_changed" name="last_changed" value="{{ item.last_changed|date:'Y-m-d' }}" readonly>
+    </div> -->
+
+    <a href="{% url 'index' %}" class="btn">Back to Inventory</a>
+  </form>
+{% endblock %}
